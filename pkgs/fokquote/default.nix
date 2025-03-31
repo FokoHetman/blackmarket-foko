@@ -35,7 +35,7 @@ stdenv.mkDerivation rec {
       echo "===================="
       echo $CONFIG
       echo "===================="
-      rustc $src/src/fok-quote.rs -o $out/bin/fok-quote
+      rustc $src/src/fok-quote.rs -o $out/bin/fokquote
     '';
 
   buildInputs = [ pkgs.rustc pkgs.gcc ];
