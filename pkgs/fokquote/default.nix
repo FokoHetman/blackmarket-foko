@@ -19,7 +19,7 @@ stdenv.mkDerivation rec {
     config = import (import src).config;
     quotes = builtins.concatStringsSep ""
       (["["]
-      ++ (lib.lists.forEach config.quotes (x: "[\"" + toString (builtins.elemAt x 0) + "\" \"" + toString (builtins.elemAt x 1) + "\"]"))
+      ++ (lib.lists.forEach config.quotes (x: "[\\\"" + toString (builtins.elemAt x 0) + "\\\" \\\"" + toString (builtins.elemAt x 1) + "\\\"]"))
       ++ ["]"]);
     plush = builtins.concatStringsSep "" (#"\\\"" + config.plush + "\\\"";
       ["["]
@@ -28,12 +28,14 @@ stdenv.mkDerivation rec {
   in
     ''
       echo "AAAAAAAAAA"
+      export PLUSH='${plush}'
+      echo "BBBBBBBBBB"
       mkdir -p "$out/bin"
-      export CONFIG="{ quotes=${quotes}; plush=${plush} }"
+      export CONFIG="{ quotes=${quotes}; plush=$PLUSH }"
       echo "===================="
       echo $CONFIG
       echo "===================="
-      rustc $src/fok-quote.rs -o $out/bin/fok-quote
+      rustc $src/src/fok-quote.rs -o $out/bin/fok-quote
     '';
 
   buildInputs = [ pkgs.rustc pkgs.gcc ];
